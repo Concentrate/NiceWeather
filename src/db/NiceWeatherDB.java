@@ -23,7 +23,6 @@ public class NiceWeatherDB {
 	public synchronized static NiceWeatherDB getInstance(Context context) {
 		if (niceweatherDB == null) {
 			niceweatherDB = new NiceWeatherDB(context);
-
 		}
 		return niceweatherDB;
 	}
@@ -33,8 +32,7 @@ public class NiceWeatherDB {
 			ContentValues content = new ContentValues();
 			content.put("province_name", province.getProvinceName());
 			content.put("province_code", province.getProvinceCode());
-			content.put("id", province.getId());
-			long tmp = db.insert("PROVINCE_TABLE", null, content);
+			long tmp = db.insert("province", null, content);
 			if (tmp == -1) {
 				Log.d("NiceWeatherDB", "saveProvince insert Wrong");
 			}
@@ -43,11 +41,11 @@ public class NiceWeatherDB {
 
 	public List<Province> loadProvinces() {
 		ArrayList<Province> thearray = new ArrayList<Province>();
-		Cursor cursor = db.query("PROVINCE_TABLE", null, null, null, null, null, null);
+		Cursor cursor=db.query("province", null, null, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
-				String province_name = cursor.getColumnName(cursor.getColumnIndex("province_name"));
-				String province_code = cursor.getColumnName(cursor.getColumnIndex("province_code"));
+				String province_name = cursor.getString(cursor.getColumnIndex("province_name"));
+				String province_code = cursor.getString(cursor.getColumnIndex("province_code"));
 				int id = cursor.getInt(cursor.getColumnIndex("id"));
 				Province pro = new Province();
 				pro.setId(id);
@@ -62,25 +60,24 @@ public class NiceWeatherDB {
 	public void saveCity(City city) {
 		if (city != null) {
 			ContentValues content = new ContentValues();
-			content.put("id", city.getId());
 			content.put("city_name", city.getCityName());
 			content.put("city_code", city.getCityCode());
 			content.put("province_id", city.getProvinceId());
-			long result = db.insert("CITY_TABLE", null, content);
+			long result = db.insert("city", null, content);
 			if (result == -1) {
 				Log.d("NiceWeatherDB", "saveCity Insert Wrong");
 			}
 		}
 	}
 
-	public List<City> loadCitys() {
+	public List<City> loadCitys(int provinceId) {
 		List<City> tmparray = new ArrayList<City>();
-		Cursor cursor = db.query("CITY_TABLE", null, null, null, null, null, null);
+		Cursor cursor = db.query("city", null, "province_id=?", new String[]{String.valueOf(provinceId)}, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				City city = new City();
-				city.setCityCode(cursor.getColumnName(cursor.getColumnIndex("city_code")));
-				city.setCityName(cursor.getColumnName(cursor.getColumnIndex("city_code")));
+				city.setCityCode(cursor.getString(cursor.getColumnIndex("city_code")));
+				city.setCityName(cursor.getString(cursor.getColumnIndex("city_name")));
 				city.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				city.setProvinceId(cursor.getInt(cursor.getColumnIndex("province_id")));
 				tmparray.add(city);
@@ -92,11 +89,10 @@ public class NiceWeatherDB {
 	public void saveCountry(Country country) {
 		if (country != null) {
 			ContentValues values = new ContentValues();
-			values.put("id", country.getId());
 			values.put("country_name", country.getCountryName());
 			values.put("country_code", country.getCountryCode());
 			values.put("city_id", country.getCityId());
-			long result=db.insert("COUNTRY_TABLE", null, values);
+			long result=db.insert("country", null, values);
 			if(result==-1)
 			{
 				Log.d("NiceWeatherDB", "In the saveCountry ,insert Wrong");
@@ -104,17 +100,17 @@ public class NiceWeatherDB {
 		}
 	}
 
-	public List<Country> loadCountries() {
+	public List<Country> loadCountries(int countryId) {
 		List<Country> tmparray = new ArrayList<Country>();
-		Cursor cursor=db.query("COUNTRY_TABLE", null, null, null, null, null,null, null);
+		Cursor cursor=db.query("country", null, "city_id=?", new String[]{String.valueOf(countryId)},  null,null, null);
 		if(cursor.moveToFirst())
 		{
 			do
 			{
 				Country country=new Country();
 				country.setCityId(cursor.getInt(cursor.getColumnIndex("city_id")));
-				country.setCountryCode(cursor.getColumnName(cursor.getColumnIndex("city_code")));
-				country.setCountryName(cursor.getColumnName(cursor.getColumnIndex("city_name")));
+				country.setCountryCode(cursor.getString(cursor.getColumnIndex("country_code")));
+				country.setCountryName(cursor.getString(cursor.getColumnIndex("country_name")));
 				country.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				tmparray.add(country);
 			}while(cursor.moveToNext());

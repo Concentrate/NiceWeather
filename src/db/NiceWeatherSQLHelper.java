@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class NiceWeatherSQLHelper extends SQLiteOpenHelper {
 
@@ -33,6 +34,7 @@ public class NiceWeatherSQLHelper extends SQLiteOpenHelper {
 		arg0.execSQL(PROVINCE_TABLE);
 		arg0.execSQL(CITY_TABLE);
 		arg0.execSQL(this.COUNTRY_TABLE);
+		Log.d("NiceWeatherSQLHelper", "OnCreate method have been executed");
 
 	}
 
