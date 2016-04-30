@@ -6,6 +6,13 @@ android:orientation="vertical" >
 android:layout_width="match_parent"
 android:layout_height="50dp"
 android:background="#484E61" >
+<Button
+android:id="@+id/switch_city"
+android:layout_width="30dp"
+android:layout_height="30dp"
+android:layout_centerVertical="true"
+android:layout_marginLeft="10dp"
+android:background="@drawable/home" />
 <TextView
 android:id="@+id/city_name"
 android:layout_width="wrap_content"
@@ -13,6 +20,14 @@ android:layout_height="wrap_content"
 android:layout_centerInParent="true"
 android:textColor="#fff"
 android:textSize="24sp" />
+<Button
+android:id="@+id/refresh_weather"
+android:layout_width="30dp"
+android:layout_height="30dp"
+android:layout_alignParentRight="true"
+android:layout_centerVertical="true"
+android:layout_marginRight="10dp"
+android:background="@drawable/refresh" />
 </RelativeLayout>
 <RelativeLayout
 android:layout_width="match_parent"
@@ -79,24 +94,5 @@ android:textColor="#FFF"
 android:textSize="40sp" />
 </LinearLayout>
 </LinearLayout>
-
-<ImageButton
-    android:id="@+id/switchButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignRight="@+id/publish_text"
-    android:layout_below="@+id/weather_info_layout"
-    android:layout_marginTop="48dp"
-    android:src="@android:drawable/btn_star" />
-
-<ImageButton
-    android:id="@+id/refreshWeather"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignTop="@+id/switchButton"
-    android:layout_marginRight="30dp"
-    android:layout_toLeftOf="@+id/switchButton"
-    android:src="@android:drawable/btn_star_big_off" />
-
 </RelativeLayout>
 </LinearLayout>

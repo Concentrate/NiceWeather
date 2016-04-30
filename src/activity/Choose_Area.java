@@ -190,6 +190,8 @@ public class Choose_Area extends Activity {
 		progressdialog.show();
 
 	}
+	
+	
 
 	private void queryCountries() {
 		// TODO Auto-generated method stub
@@ -233,6 +235,8 @@ public class Choose_Area extends Activity {
 		} else if (currentLevel == LEVEL_CITY) {
 			queryProvinces();
 		} else {
+			Intent intent=new Intent(this,WeatherActivity.class);
+			startActivity(intent);
 			finish();
 		}
 	}

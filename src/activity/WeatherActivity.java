@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import service.UpdateService;
 import util.HttpCallbackListener;
 import util.HttpSendRequest;
 import util.Utility;
@@ -31,8 +33,10 @@ public class WeatherActivity extends Activity implements OnClickListener {
 	private TextView tmp2Text;
 	private TextView currentDateText;
 	private TextView publishTimeText;
-	private ImageButton switchCity;
-	private ImageButton refreshWeather;
+	private Button switchCity;
+	private Button refreshWeather;
+	private static long judgeIfquitTime1 = 0;
+	private static long judgeIfquitTime2 = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +50,8 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		this.tmp1Text = (TextView) findViewById(R.id.temp1);
 		this.tmp2Text = (TextView) findViewById(R.id.temp2);
 		this.currentDateText = (TextView) findViewById(R.id.current_date);
-		switchCity = (ImageButton) findViewById(R.id.switchButton);
-		refreshWeather = (ImageButton) findViewById(R.id.refreshWeather);
+		switchCity = (Button) findViewById(R.id.switch_city);
+		refreshWeather = (Button) findViewById(R.id.refresh_weather);
 		String countryCode = getIntent().getStringExtra("country_code");
 		if (!TextUtils.isEmpty(countryCode)) {
 			publishTimeText.setText("同步中");
@@ -64,7 +68,7 @@ public class WeatherActivity extends Activity implements OnClickListener {
 	private void showWeather() {
 		// TODO Auto-generated method stub
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		String tmp1=prefs.getString("city_name", "");
+		String tmp1 = prefs.getString("city_name", "");
 		Log.d("Debug", tmp1);
 		cityNameText.setText(prefs.getString("city_name", ""));
 		this.currentDateText.setText(prefs.getString("currentTime", ""));
@@ -74,6 +78,9 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		this.weatherInfoLayout.setVisibility(View.VISIBLE);
 		this.cityNameText.setVisibility(View.VISIBLE);
 		this.weatherDesp.setText(prefs.getString("weatherDescrp", ""));
+		Intent intent=new Intent(this,UpdateService.class);
+		startService(intent);
+		
 
 	}
 
@@ -164,13 +171,13 @@ public class WeatherActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.switchButton:
+		case R.id.switch_city:
 			Intent intent = new Intent(this, Choose_Area.class);
 			intent.putExtra("from_weather_activity", true);
 			startActivity(intent);
 			finish();
 			break;
-		case R.id.refreshWeather:
+		case R.id.refresh_weather:
 			this.weatherDesp.setText("同步中...");
 			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 			String cityId = pref.getString("cityId", "");
@@ -182,5 +189,21 @@ public class WeatherActivity extends Activity implements OnClickListener {
 			break;
 		}
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		judgeIfquitTime1=this.judgeIfquitTime2;
+		this.judgeIfquitTime2 = System.currentTimeMillis();
+		if (this.judgeIfquitTime1 == 0 || this.judgeIfquitTime2 == 0) {
+			Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+			this.judgeIfquitTime2= System.currentTimeMillis();
+			return;
+		}
+		if (this.judgeIfquitTime2- this.judgeIfquitTime1 <= 1500)
+			super.onBackPressed();
+		else
+			Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
 	}
 }
