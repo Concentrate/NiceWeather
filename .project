@@ -30,4 +30,16 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>res/arrow-refresh-4-icon.png</name>
+			<type>1</type>
+			<location>/home/ldy/Pictures/arrow-refresh-4-icon.png</location>
+		</link>
+		<link>
+			<name>res/drawable-hdpi/move-icon.png</name>
+			<type>1</type>
+			<location>/home/ldy/Pictures/move-icon.png</location>
+		</link>
+	</linkedResources>
 </projectDescription>

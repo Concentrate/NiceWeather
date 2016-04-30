@@ -5,7 +5,10 @@ import com.example.niceweather.R;
 import java.util.List;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -46,6 +49,19 @@ public class Choose_Area extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(com.example.niceweather.R.layout.choose_layout);
+		Intent secondIntent=getIntent();
+		boolean isChooseAnotherOne=false;
+		if(secondIntent!=null)
+		{
+			 isChooseAnotherOne=secondIntent.getBooleanExtra("from_weather_activity", false);
+		}
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		if (pref.getBoolean("city_selected", false)&&!isChooseAnotherOne) {
+			Intent intent = new Intent(this, WeatherActivity.class);
+			startActivity(intent);
+			finish();
+			return;
+		}
 		title = (TextView) findViewById(R.id.text_view);
 		listview = (ListView) findViewById(R.id.list_view);
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data_list);
@@ -63,6 +79,12 @@ public class Choose_Area extends Activity {
 				} else if (currentLevel == LEVEL_CITY) {
 					selectedCity = cityList.get(arg2);
 					queryCountries();
+				} else if (currentLevel == LEVEL_COUNTRY) {
+					String countryCode = countryList.get(arg2).getCountryCode();
+					Intent intent = new Intent(Choose_Area.this, WeatherActivity.class);
+					intent.putExtra("country_code", countryCode);
+					startActivity(intent);
+					finish();
 				}
 			}
 
@@ -180,7 +202,7 @@ public class Choose_Area extends Activity {
 			adapter.notifyDataSetChanged();
 			listview.setSelection(0);
 			title.setText(selectedCity.getCityName());
-			currentLevel = LEVEL_CITY;
+			currentLevel = LEVEL_COUNTRY;
 		} else {
 			queryFromServe(selectedCity.getCityCode(), "country");
 		}
